@@ -1,5 +1,4 @@
-// src/components/Courses.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import API from "../api";
 import { useNavigate } from "react-router-dom";
 
@@ -14,10 +13,6 @@ function Courses() {
     syllabus: null,
   });
 
-  useEffect(() => {
-    API.get("courses/").catch(err => console.error(err));
-  }, []);
-
   const handleChange = (key, value) => {
     setForm({ ...form, [key]: value });
   };
@@ -28,93 +23,80 @@ function Courses() {
     }
 
     const data = new FormData();
-    Object.keys(form).forEach(key => {
-      if (form[key]) data.append(key, form[key]);
-    });
+    data.append("name", form.name);
+    data.append("description", form.description);
+    data.append("duration", form.duration);
+    data.append("category", form.category);
+
+    if (form.syllabus) {
+      data.append("syllabus", form.syllabus);
+    }
 
     try {
-      await API.post("courses/", data);
-      alert(" Course Added");
-
-      setForm({
-        name: "",
-        description: "",
-        duration: "",
-        category: "other",
-        syllabus: null,
+      const token = localStorage.getItem("access_token");
+      const res = await API.post("courses/", data, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
       });
 
+      console.log(res.data);
+      alert("Course Added");
       navigate("/course-list");
+
     } catch (err) {
-      console.error(err);
-      alert(" Error");
+      console.error(err.response?.data);
+      alert("Upload Error");
     }
   };
 
   return (
-    <div className="min-h-screen flex justify-center items-start bg-gray-100 px-4 py-10">
+    <div className="min-h-screen flex justify-center bg-gray-100 py-10">
+      <div className="w-full max-w-xl bg-white p-6 rounded shadow">
+        <h2 className="text-2xl font-bold text-center mb-6">Add Course</h2>
 
-      <div className="w-full max-w-xl bg-white p-6 rounded-xl shadow">
+        <input
+          placeholder="Course Name"
+          onChange={(e) => handleChange("name", e.target.value)}
+          className="w-full border p-2 mb-3"
+        />
 
-        <h2 className="text-2xl font-bold text-center mb-6">
-          Add Course
-        </h2>
+        <input
+          placeholder="Duration"
+          onChange={(e) => handleChange("duration", e.target.value)}
+          className="w-full border p-2 mb-3"
+        />
 
-        <div className="space-y-4">
+        <select
+          onChange={(e) => handleChange("category", e.target.value)}
+          className="w-full border p-2 mb-3"
+        >
+          <option value="python">python</option>
+          <option value="java">java</option>
+          <option value="react">react</option>
+          <option value="php">php</option>
+          <option value="other">Other</option>
+        </select>
 
-          {/* Name */}
-          <input
-            placeholder="Course Name"
-            value={form.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-            className="w-full border p-2 rounded outline-none focus:border-blue-500"
-          />
+        <textarea
+          placeholder="Description"
+          onChange={(e) => handleChange("description", e.target.value)}
+          className="w-full border p-2 mb-3"
+        />
 
-          {/* Duration */}
-          <input
-            placeholder="Duration"
-            value={form.duration}
-            onChange={(e) => handleChange("duration", e.target.value)}
-            className="w-full border p-2 rounded outline-none focus:border-blue-500"
-          />
+        <input
+          type="file"
+          onChange={(e) => handleChange("syllabus", e.target.files[0])}
+          className="w-full border p-2 mb-3"
+        />
 
-          {/* Category */}
-          <select
-            value={form.category}
-            onChange={(e) => handleChange("category", e.target.value)}
-            className="w-full border p-2 rounded outline-none focus:border-blue-500"
-          >
-            <option value="python">python</option>
-            <option value="java">java</option>
-            <option value="react">react</option>
-            <option value="php">php</option>
-            <option value="other">Other</option>
-          </select>
-
-          {/* Description */}
-          <textarea
-            placeholder="Description"
-            value={form.description}
-            onChange={(e) => handleChange("description", e.target.value)}
-            className="w-full border p-2 rounded outline-none focus:border-blue-500"
-          />
-
-          {/* File */}
-          <input
-            type="file"
-            onChange={(e) => handleChange("syllabus", e.target.files[0])}
-            className="w-full border p-2 rounded"
-          />
-
-          {/* Button */}
-          <button
-            onClick={addCourse}
-            className="w-50 bg-blue-600 text-white py-2 rounded"
-          >
-            Submit
-          </button>
-
-        </div>
+        <button
+          onClick={addCourse}
+          className="w-full bg-blue-600 text-white py-2"
+        >
+          Submit
+        </button>
       </div>
     </div>
   );

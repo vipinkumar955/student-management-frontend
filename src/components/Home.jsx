@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
-  const role = localStorage.getItem("role"); // logged-in user's role
+  const role = localStorage.getItem("role"); 
+  const token = localStorage.getItem("access");
+
+
 
   const handleClick = (panel) => {
     // User logged out → login page
@@ -21,6 +24,10 @@ function Home() {
     // Role match → dashboard
     navigate(`/${panel}`);
   };
+  if (!token) {
+  navigate("/login");
+  return;
+}
 
   return (
     <div className="min-h-screen bg-gray-50 pt-24"> {/* pt-24 → navbar ke liye spacing */}
