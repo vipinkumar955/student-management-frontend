@@ -33,17 +33,13 @@ function Courses() {
     }
 
     try {
-      const token = localStorage.getItem("access_token");
+      const token = localStorage.getItem("access"); // fixed token key
       const res = await API.post("courses/", data, {
         headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'multipart/form-data'
-        }
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       });
-
-      console.log(res.data);
-      alert("Course Added");
-      navigate("/course-list");
 
     } catch (err) {
       console.error(err.response?.data);
