@@ -43,9 +43,9 @@ const AddAssignment = () => {
         ...form,
         max_marks: Number(form.max_marks),
         course: Number(course),
-        student: Number(student), // ⚡ important for serializer
+        student: Number(student), //important for serializer
       });
-      alert("✅ Assignment Added Successfully!");
+      alert(" Assignment Added Successfully!");
       setForm({
         title: "",
         description: "",

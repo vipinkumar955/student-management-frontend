@@ -1,18 +1,14 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
 import ProtectedRoute from "./components/ProtectedRoute";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-
 import Login from "./Login";
 import Signup from "./Signup";
 import Home from "./components/Home";
-
 import StudentDashboard from "./StudentDashboard";
 import TeacherDashboard from "./Teacherpages/TeacherDashboard";
 import AdminDashboard from "./AdminDashboard";
-
 import Courses from "./Teacherpages/Courses";
 import Assignments from "./Teacherpages/Assignments";
 import Grades from "./Teacherpages/Grades";
@@ -95,5 +91,4 @@ function App() {
     </BrowserRouter>
   );
 }
-
 export default App;
