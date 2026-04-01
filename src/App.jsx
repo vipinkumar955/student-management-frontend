@@ -1,8 +1,4 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import Home from "./components/Home";
@@ -19,25 +15,25 @@ import AssignmentList from "./Teacherpages/AssignmentList";
 import CourseList from "./Teacherpages/CourseList";
 import GradeList from "./Teacherpages/GradeList";
 import StudentList from "./Teacherpages/StudentList";
-
 import StudentSearch from "./Studentpages/StudentSearch";
 import AssignmentSearch from "./Studentpages/AssignmentSearch";
 import AttendanceSearch from "./Studentpages/AttendanceSearch";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import ProtectedRoute from "./ProtectedRoute"; // Import from separate file
 
 function App() {
   return (
     <BrowserRouter>
-
       <Header />
-
-  
       <div className="pt-20 min-h-screen">
-
         <Routes>
-          <Route path="/signup" element={<Signup />} />
+          {/* Public Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-
+          <Route path="/signup" element={<Signup />} />
+          
+          {/* Protected Routes with role-based access */}
           <Route
             path="/student"
             element={
@@ -46,7 +42,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/teacher"
             element={
@@ -55,7 +50,6 @@ function App() {
               </ProtectedRoute>
             }
           />
-
           <Route
             path="/admin"
             element={
@@ -65,30 +59,82 @@ function App() {
             }
           />
 
-          {/* Teacher Only */}
-          <Route path="/courses" element={<ProtectedRoute role="teacher"><Courses /></ProtectedRoute>} />
-          <Route path="/assignments" element={<ProtectedRoute role="teacher"><Assignments /></ProtectedRoute>} />
-          <Route path="/grades" element={<ProtectedRoute role="teacher"><Grades /></ProtectedRoute>} />
-          <Route path="/course-list" element={<ProtectedRoute role="teacher"><CourseList /></ProtectedRoute>} />
-          <Route path="/assignment-list" element={<ProtectedRoute role="teacher"><AssignmentList /></ProtectedRoute>} />
-          <Route path="/grade-list" element={<ProtectedRoute role="teacher"><GradeList /></ProtectedRoute>} />
-          <Route path="/student-list" element={<ProtectedRoute role="teacher"><StudentList /></ProtectedRoute>} />
-          <Route path="/Addstudent" element={<ProtectedRoute role="teacher"><AddStudent /></ProtectedRoute>} />
-          <Route path="/attendance" element={<ProtectedRoute role="teacher"><AddAttendance /></ProtectedRoute>} />
-          <Route path="/attendance-list" element={<ProtectedRoute role="teacher"><AttendanceList /></ProtectedRoute>} />
+          {/* Teacher Only Routes */}
+          <Route path="/courses" element={
+            <ProtectedRoute role="teacher">
+              <Courses />
+            </ProtectedRoute>
+          } />
+          <Route path="/assignments" element={
+            <ProtectedRoute role="teacher">
+              <Assignments />
+            </ProtectedRoute>
+          } />
+          <Route path="/grades" element={
+            <ProtectedRoute role="teacher">
+              <Grades />
+            </ProtectedRoute>
+          } />
+          <Route path="/course-list" element={
+            <ProtectedRoute role="teacher">
+              <CourseList />
+            </ProtectedRoute>
+          } />
+          <Route path="/assignment-list" element={
+            <ProtectedRoute role="teacher">
+              <AssignmentList />
+            </ProtectedRoute>
+          } />
+          <Route path="/grade-list" element={
+            <ProtectedRoute role="teacher">
+              <GradeList />
+            </ProtectedRoute>
+          } />
+          <Route path="/student-list" element={
+            <ProtectedRoute role="teacher">
+              <StudentList />
+            </ProtectedRoute>
+          } />
+          <Route path="/Addstudent" element={
+            <ProtectedRoute role="teacher">
+              <AddStudent />
+            </ProtectedRoute>
+          } />
+          <Route path="/attendance" element={
+            <ProtectedRoute role="teacher">
+              <AddAttendance />
+            </ProtectedRoute>
+          } />
+          <Route path="/attendance-list" element={
+            <ProtectedRoute role="teacher">
+              <AttendanceList />
+            </ProtectedRoute>
+          } />
 
-          {/*  Student Only */}
-          <Route path="/student-search" element={<ProtectedRoute role="student"><StudentSearch /></ProtectedRoute>} />
-          <Route path="/assignment-search" element={<ProtectedRoute role="student"><AssignmentSearch /></ProtectedRoute>} />
-          <Route path="/attendance-search" element={<ProtectedRoute role="student"><AttendanceSearch /></ProtectedRoute>} />
-
+          {/* Student Only Routes */}
+          <Route path="/student-search" element={
+            <ProtectedRoute role="student">
+              <StudentSearch />
+            </ProtectedRoute>
+          } />
+          <Route path="/assignment-search" element={
+            <ProtectedRoute role="student">
+              <AssignmentSearch />
+            </ProtectedRoute>
+          } />
+          <Route path="/attendance-search" element={
+            <ProtectedRoute role="student">
+              <AttendanceSearch />
+            </ProtectedRoute>
+          } />
+          
+          {/* Catch all - redirect to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-
       </div>
-
       <Footer />
-
     </BrowserRouter>
   );
 }
+
 export default App;

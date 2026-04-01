@@ -8,8 +8,11 @@ const ProtectedRoute = ({ children, role }) => {
   if (!token) {
     return <Navigate to="/login" replace />;
   }
+  
   if (role && userRole !== role) {
-    return <Navigate to="/login" replace />;
+    // Redirect to home with access denied message
+    alert(`Access Denied: You don't have ${role} privileges`);
+    return <Navigate to="/" replace />;
   }
 
   return children;

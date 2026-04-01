@@ -13,7 +13,7 @@ function Home() {
     }
 
     if (role !== panel) {
-      alert("Access Denied");
+      alert(`Access Denied: You are logged in as ${role}, not ${panel}`);
       return;
     }
 
@@ -22,16 +22,13 @@ function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 pt-24">
-
-      {/*  Hero Section  */}
+      {/* Hero Section */}
       <div
         className="h-[350px] bg-cover bg-center rounded-b-[40px] shadow-2xl mx-1"
         style={{ backgroundImage: `url("/ed.jpg")` }}
       ></div>
-
     
       <div className="flex flex-wrap justify-center gap-10 mt-16 px-6">
-
         {/* Student */}
         <div
           onClick={() => handleClick("student")}
@@ -42,6 +39,9 @@ function Home() {
           </div>
           <h3 className="text-2xl font-bold text-indigo-700 mb-2">🎓 Student Panel</h3>
           <p className="text-gray-600 text-sm">View grades & assignments</p>
+          {token && role === "student" && (
+            <span className="inline-block mt-3 text-sm text-green-600 font-semibold">✓ Logged in</span>
+          )}
         </div>
 
         {/* Teacher */}
@@ -52,8 +52,11 @@ function Home() {
           <div className="overflow-hidden rounded-full w-32 h-32 mx-auto mb-5 border-4 border-green-200 group-hover:scale-110 transition">
             <img src="/teacher.png" alt="Teacher" className="w-full h-full object-cover" />
           </div>
-          <h3 className="text-2xl font-bold text-green-700 mb-2"> Teacher Panel</h3>
+          <h3 className="text-2xl font-bold text-green-700 mb-2">👩‍🏫 Teacher Panel</h3>
           <p className="text-gray-600 text-sm">Manage courses & students</p>
+          {token && role === "teacher" && (
+            <span className="inline-block mt-3 text-sm text-green-600 font-semibold">✓ Logged in</span>
+          )}
         </div>
 
         {/* Admin */}
@@ -64,41 +67,36 @@ function Home() {
           <div className="overflow-hidden rounded-full w-32 h-32 mx-auto mb-5 border-4 border-red-200 group-hover:scale-110 transition">
             <img src="/admin.jpg" alt="Admin" className="w-full h-full object-cover" />
           </div>
-          <h3 className="text-2xl font-bold text-red-700 mb-2"> Admin Panel</h3>
+          <h3 className="text-2xl font-bold text-red-700 mb-2">👑 Admin Panel</h3>
           <p className="text-gray-600 text-sm">System control & management</p>
+          {token && role === "admin" && (
+            <span className="inline-block mt-3 text-sm text-green-600 font-semibold">✓ Logged in</span>
+          )}
         </div>
-
       </div>
 
-      
       <div className="grid md:grid-cols-3 gap-8 mt-20 px-10">
-
         <div className="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition">
-          <h3 className="text-xl font-bold text-indigo-600 mb-2"> Analytics</h3>
+          <h3 className="text-xl font-bold text-indigo-600 mb-2">📊 Analytics</h3>
           <p className="text-gray-600 text-sm">
             Track performance and view detailed reports easily
           </p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition">
-          <h3 className="text-xl font-bold text-green-600 mb-2">Courses</h3>
+          <h3 className="text-xl font-bold text-green-600 mb-2">📚 Courses</h3>
           <p className="text-gray-600 text-sm">
             Access and manage all courses in one place
           </p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-6 text-center hover:shadow-xl transition">
-          <h3 className="text-xl font-bold text-red-600 mb-2">Security</h3>
+          <h3 className="text-xl font-bold text-red-600 mb-2">🔒 Security</h3>
           <p className="text-gray-600 text-sm">
             Secure login system with role-based access
           </p>
         </div>
-
       </div>
-
-    
-     
-
     </div>
   );
 }
