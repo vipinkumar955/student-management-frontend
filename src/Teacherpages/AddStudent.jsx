@@ -14,7 +14,6 @@ function AddStudent() {
     selectedCourses: [],
   });
 
-  // Fetch courses
   useEffect(() => {
     API.get("courses/")
       .then((res) => setCourses(res.data))
@@ -36,28 +35,66 @@ function AddStudent() {
   const submit = async () => {
     const { username, email, password, selectedCourses } = form;
 
-    if (!username || !email || !password) return setError("All fields are required!");
-    if (selectedCourses.length === 0) return setError("Select at least one course!");
+    if (!username || !email || !password) {
+      setError("All fields are required!");
+      return;
+    }
+    
+    // FIX: Password length validation
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long!");
+      return;
+    }
+    
+    if (selectedCourses.length === 0) {
+      setError("Select at least one course!");
+      return;
+    }
 
     try {
+      // FIX: Send proper data to register endpoint
       const res = await API.post("auth/register/", {
-        username,
-        email,
-        password,
-        role: "student",
+        username: username.trim(),
+        email: email.trim().toLowerCase(),
+        password: password,
+        role: "student",  // Role is required by backend
       });
 
+      console.log("Registration success:", res.data);
+
+      // FIX: Get the user ID from response
+      const userId = res.data.user?.id;
+      if (!userId) {
+        throw new Error("User ID not returned from registration");
+      }
+
+      // Create student profile
       await API.post("students/", {
-        user: res.data.id,
+        user: userId,
         enrolled_courses: selectedCourses,
       });
 
-      alert(" Student Added Successfully!");
+      alert("✅ Student Added Successfully!");
       setForm({ username: "", email: "", password: "", selectedCourses: [] });
       navigate("/student-list");
     } catch (err) {
       console.log("REGISTER ERROR:", err.response?.data);
-      setError(" Failed to add student");
+      
+      // Show detailed error message
+      if (err.response?.data) {
+        const errors = err.response.data;
+        let errorMsg = "Failed to add student: ";
+        
+        if (errors.username) errorMsg += `Username: ${errors.username.join(", ")}. `;
+        if (errors.email) errorMsg += `Email: ${errors.email.join(", ")}. `;
+        if (errors.password) errorMsg += `Password: ${errors.password.join(", ")}. `;
+        if (errors.role) errorMsg += `Role: ${errors.role.join(", ")}. `;
+        if (errors.detail) errorMsg = errors.detail;
+        
+        setError(errorMsg);
+      } else {
+        setError("Failed to add student. Please try again.");
+      }
     }
   };
 
@@ -88,7 +125,7 @@ function AddStudent() {
 
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Password (min 8 characters)"
             value={form.password}
             onChange={(e) => handleChange("password", e.target.value)}
             className="w-full border px-3 py-2 rounded outline-none focus:border-blue-500"
