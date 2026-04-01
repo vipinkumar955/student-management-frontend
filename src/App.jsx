@@ -20,7 +20,7 @@ import AssignmentSearch from "./Studentpages/AssignmentSearch";
 import AttendanceSearch from "./Studentpages/AttendanceSearch";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import ProtectedRoute from "./ProtectedRoute"; // Import from separate file
+import ProtectedRoute from "./components/ProtectedRoute"; 
 
 function App() {
   return (
