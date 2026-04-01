@@ -1,4 +1,5 @@
 // src/Login.jsx
+// src/Login.jsx
 import React, { useState } from "react";
 import API from "./api";
 import { useNavigate, Link } from "react-router-dom";
@@ -19,31 +20,51 @@ function Login() {
     
     try {
       const response = await API.post("auth/login/", credentials);
-      console.log("Login response:", response.data);
+      console.log("Full login response:", response);
+      console.log("Login response data:", response.data);
+      
+      // Check if response data exists
+      if (!response.data) {
+        throw new Error("No data received from server");
+      }
       
       // Store tokens and user data
-      localStorage.setItem("access", response.data.access);
-      localStorage.setItem("refresh", response.data.refresh);
-      localStorage.setItem("role", response.data.role);
-      localStorage.setItem("user_id", response.data.user_id);
-      localStorage.setItem("username", response.data.username);
-      
-      alert("Login Successful!");
-      
-      // Redirect based on role
-      if (response.data.role === "admin") {
-        navigate("/admin");
-      } else if (response.data.role === "teacher") {
-        navigate("/teacher");
+      if (response.data.access) {
+        localStorage.setItem("access", response.data.access);
+        localStorage.setItem("refresh", response.data.refresh);
+        localStorage.setItem("role", response.data.role || "student");
+        localStorage.setItem("user_id", response.data.user_id || "");
+        localStorage.setItem("username", credentials.username);
+        
+        console.log("Stored role:", localStorage.getItem("role"));
+        alert("Login Successful!");
+        
+        // Redirect based on role
+        const userRole = response.data.role || "student";
+        if (userRole === "admin") {
+          navigate("/admin");
+        } else if (userRole === "teacher") {
+          navigate("/teacher");
+        } else {
+          navigate("/student");
+        }
       } else {
-        navigate("/student");
+        throw new Error("No access token received");
       }
       
     } catch (error) {
-      console.error("Login ERROR:", error.response?.data);
-      const errorMessage = error.response?.data?.detail || 
-                          error.response?.data?.message || 
-                          "Invalid username or password";
+      console.error("Login ERROR:", error);
+      console.error("Error response:", error.response?.data);
+      
+      let errorMessage = "Invalid username or password";
+      if (error.response?.data?.detail) {
+        errorMessage = error.response.data.detail;
+      } else if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+      
       setError(errorMessage);
       alert(errorMessage);
     } finally {
