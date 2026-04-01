@@ -1,9 +1,11 @@
 import axios from "axios";
+import.meta.env.VITE_API_URL
 
 // Axios instance with base URL from environment
 const API = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/api/`,
-});
+  baseURL:`${import.meta.env.VITE_API_URL}/api/`,
+})
+
 
 // Add access token to request headers
 API.interceptors.request.use((req) => {
