@@ -48,7 +48,7 @@ function AddAttendance() {
       if (err.response && err.response.data) {
         setError(err.response.data.non_field_errors ? "Attendance already exists ❗" : JSON.stringify(err.response.data));
       } else {
-        setError("Something went wrong ❌");
+        setError("Something went wrong ");
       }
     }
   };

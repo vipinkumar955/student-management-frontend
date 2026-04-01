@@ -39,7 +39,9 @@ function Courses() {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
+
       });
+      navigate("/course-list"); 
 
     } catch (err) {
       console.error(err.response?.data);
