@@ -20,43 +20,37 @@ function Login() {
     
     try {
       const response = await API.post("auth/login/", credentials);
-      console.log("Full login response:", response);
-      console.log("Login response data:", response.data);
+      console.log("Login response:", response.data);
       
-      // Check if response data exists
-      if (!response.data) {
+      // Check if we have data
+      if (!response.data || !response.data.access) {
         throw new Error("No data received from server");
       }
       
       // Store tokens and user data
-      if (response.data.access) {
-        localStorage.setItem("access", response.data.access);
-        localStorage.setItem("refresh", response.data.refresh);
-        localStorage.setItem("role", response.data.role || "student");
-        localStorage.setItem("user_id", response.data.user_id || "");
-        localStorage.setItem("username", credentials.username);
-        
-        console.log("Stored role:", localStorage.getItem("role"));
-        alert("Login Successful!");
-        
-        // Redirect based on role
-        const userRole = response.data.role || "student";
-        if (userRole === "admin") {
-          navigate("/admin");
-        } else if (userRole === "teacher") {
-          navigate("/teacher");
-        } else {
-          navigate("/student");
-        }
+      localStorage.setItem("access", response.data.access);
+      localStorage.setItem("refresh", response.data.refresh);
+      localStorage.setItem("role", response.data.role);
+      localStorage.setItem("user_id", response.data.user_id);
+      localStorage.setItem("username", response.data.username);
+      
+      console.log("Stored role:", localStorage.getItem("role"));
+      alert("Login Successful!");
+      
+      // Redirect based on role
+      const userRole = response.data.role;
+      if (userRole === "admin") {
+        navigate("/admin");
+      } else if (userRole === "teacher") {
+        navigate("/teacher");
       } else {
-        throw new Error("No access token received");
+        navigate("/student");
       }
       
     } catch (error) {
       console.error("Login ERROR:", error);
-      console.error("Error response:", error.response?.data);
-      
       let errorMessage = "Invalid username or password";
+      
       if (error.response?.data?.detail) {
         errorMessage = error.response.data.detail;
       } else if (error.response?.data?.message) {
