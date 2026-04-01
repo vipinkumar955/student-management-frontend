@@ -1,3 +1,4 @@
+// src/api.js
 import axios from "axios";
 
 // Axios instance
@@ -5,11 +6,17 @@ const API = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/`,
 });
 
-// Request interceptor
+// Request interceptor - Skip for auth endpoints
 API.interceptors.request.use((req) => {
-  const token = localStorage.getItem("access");
-  if (token) {
-    req.headers.Authorization = `Bearer ${token}`;
+  // Skip adding token for auth endpoints
+  const authEndpoints = ['auth/login/', 'auth/register/', 'token/refresh/'];
+  const isAuthEndpoint = authEndpoints.some(endpoint => req.url?.includes(endpoint));
+  
+  if (!isAuthEndpoint) {
+    const token = localStorage.getItem("access");
+    if (token) {
+      req.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return req;
 });
