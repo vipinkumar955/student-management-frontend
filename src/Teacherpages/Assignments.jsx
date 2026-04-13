@@ -12,7 +12,7 @@ const AddAssignment = () => {
     due_date: "",
     max_marks: 100,
     course: "",
-    student: "", // ⚡ required
+    student: "", //
   });
   const [error, setError] = useState("");
 
@@ -43,25 +43,13 @@ const AddAssignment = () => {
         ...form,
         max_marks: Number(form.max_marks),
         course: Number(course),
-        student: Number(student), //important for serializer
+        student: Number(student), 
       });
       alert(" Assignment Added Successfully!");
-      setForm({
-        title: "",
-        description: "",
-        due_date: "",
-        max_marks: 100,
-        course: "",
-        student: "",
-      });
       navigate("/assignment-list");
     } catch (err) {
       console.error(err);
-      if (err.response && err.response.data) {
-        setError(JSON.stringify(err.response.data));
-      } else {
-        setError("Something went wrong!");
-      }
+     
     }
   };
 
