@@ -1,111 +1,78 @@
-// src/Login.jsx
-// src/Login.jsx
 import React, { useState } from "react";
 import API from "./api";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function Login() {
+export default function Login() {
   const navigate = useNavigate();
-  const [credentials, setCredentials] = useState({ 
-    username: "", 
-    password: "" 
+
+  const [data, setData] = useState({
+    username: "",
+    password: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
-    
     try {
-      const response = await API.post("auth/login/", credentials);
-      console.log("Login response:", response.data);
-      
-      // Check if we have data
-      if (!response.data || !response.data.access) {
-        throw new Error("No data received from server");
-      }
-      
-      // Store tokens and user data
-      localStorage.setItem("access", response.data.access);
-      localStorage.setItem("refresh", response.data.refresh);
-      localStorage.setItem("role", response.data.role);
-      localStorage.setItem("user_id", response.data.user_id);
-      localStorage.setItem("username", response.data.username);
-      
-      console.log("Stored role:", localStorage.getItem("role"));
-      alert("Login Successful!");
-      
-      // Redirect based on role
-      const userRole = response.data.role;
-      if (userRole === "admin") {
-        navigate("/admin");
-      } else if (userRole === "teacher") {
-        navigate("/teacher");
-      } else {
-        navigate("/student");
-      }
-      
-    } catch (error) {
-      console.error("Login ERROR:", error);
-      let errorMessage = "Invalid username or password";
-      
-      if (error.response?.data?.detail) {
-        errorMessage = error.response.data.detail;
-      } else if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
-      } else if (error.message) {
-        errorMessage = error.message;
-      }
-      
-      setError(errorMessage);
-      alert(errorMessage);
-    } finally {
-      setLoading(false);
+      const res = await API.post("auth/login/", data);
+
+      localStorage.setItem("access", res.data.access);
+      localStorage.setItem("refresh", res.data.refresh);
+      localStorage.setItem("role", res.data.role);
+
+      navigate(`/${res.data.role}`);
+    } catch {
+      alert("Invalid Username or Password");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-indigo-100">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md space-y-4">
-        <h2 className="text-2xl font-bold text-center text-blue-700 mb-4">🔐 Login</h2>
-        
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded text-sm">
-            {error}
-          </div>
-        )}
-        
-        <input 
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 via-white to-indigo-100">
+      
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md space-y-5"
+      >
+        <h2 className="text-2xl font-bold text-center text-blue-600">
+          Welcome Back 
+        </h2>
+
+        {/* Username */}
+        <input
           type="text"
-          placeholder="Username" 
-          required 
-          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" 
-          onChange={(e) => setCredentials({ ...credentials, username: e.target.value })} 
+          placeholder="Username"
+          required
+          className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+          onChange={(e) => setData({ ...data, username: e.target.value })}
         />
-        <input 
+
+        {/* Password */}
+        <input
           type="password"
-          placeholder="Password" 
-          required 
-          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400" 
-          onChange={(e) => setCredentials({ ...credentials, password: e.target.value })} 
+          placeholder="Password"
+          required
+          className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+          onChange={(e) => setData({ ...data, password: e.target.value })}
         />
-        
-        <button 
-          type="submit" 
-          disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold disabled:opacity-50"
+
+        {/* Button */}
+        <button
+          type="submit"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition"
         >
-          {loading ? "Logging in..." : "Login"}
+          Login
         </button>
-        
-        <p className="text-center text-sm text-gray-500 mt-2">
-          Don't have an account? <Link to="/signup" className="text-blue-600 hover:underline">Signup here</Link>
+
+        {/* Footer */}
+        <p className="text-center text-sm text-gray-500">
+          Don't have an account?{" "}
+          <span
+            onClick={() => navigate("/signup")}
+            className="text-blue-600 cursor-pointer hover:underline"
+          >
+            Signup
+          </span>
         </p>
       </form>
     </div>
   );
 }
-
-export default Login;

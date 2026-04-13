@@ -1,23 +1,11 @@
-// src/components/ProtectedRoute.jsx
 import { Navigate } from "react-router-dom";
 
-const ProtectedRoute = ({ children, role }) => {
+export default function ProtectedRoute({ children, role }) {
   const token = localStorage.getItem("access");
   const userRole = localStorage.getItem("role");
 
-  console.log("ProtectedRoute - Token:", !!token, "User Role:", userRole, "Required:", role);
-
-  if (!token) {
-    alert("Please login to access this page");
-    return <Navigate to="/login" replace />;
-  }
-  
-  if (role && userRole !== role) {
-    alert(`Access Denied: You are logged in as ${userRole || 'unknown'}, but this page requires ${role} privileges`);
-    return <Navigate to="/" replace />;
-  }
+  if (!token) return <Navigate to="/login" />;
+  if (role && role !== userRole) return <Navigate to="/" />;
 
   return children;
-};
-
-export default ProtectedRoute;
+}
