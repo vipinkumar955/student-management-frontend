@@ -22,27 +22,25 @@ function Courses() {
       return alert("Name & Description required");
     }
 
-    const data = new FormData();
-    data.append("name", form.name);
-    data.append("description", form.description);
-    data.append("duration", form.duration);
-    data.append("category", form.category);
-
-    if (form.syllabus) {
-      data.append("syllabus", form.syllabus);
-    }
-
     try {
-      const token = localStorage.getItem("access"); // fixed token key
+      const data = new FormData();
+
+      data.append("name", form.name);
+      data.append("description", form.description);
+      data.append("duration", form.duration);
+      data.append("category", form.category);
+
+      if (form.syllabus) {
+        data.append("syllabus", form.syllabus);
+      }
+
       const res = await API.post("courses/", data, {
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
-
       });
-      navigate("/course-list"); 
 
+      navigate("/course-list");
     } catch (err) {
       console.error(err.response?.data);
       alert("Upload Error");
@@ -70,10 +68,10 @@ function Courses() {
           onChange={(e) => handleChange("category", e.target.value)}
           className="w-full border p-2 mb-3"
         >
-          <option value="python">python</option>
-          <option value="java">java</option>
-          <option value="react">react</option>
-          <option value="php">php</option>
+          <option value="python">Python</option>
+          <option value="java">Java</option>
+          <option value="react">React</option>
+          <option value="php">PHP</option>
           <option value="other">Other</option>
         </select>
 
