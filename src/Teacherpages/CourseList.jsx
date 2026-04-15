@@ -19,9 +19,15 @@ function CourseList() {
     c.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  // 🔥 File type check function
+  const isImage = (url) => {
+    return /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-200 to-blue-300 p-10">
       <div className="max-w-7xl mx-auto bg-white/90 backdrop-blur-lg p-6 rounded-3xl shadow-2xl">
+
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
           <h2 className="text-3xl font-bold text-indigo-700">📚 Courses</h2>
           <input
@@ -51,42 +57,45 @@ function CourseList() {
                   <th className="p-3">Actions</th>
                 </tr>
               </thead>
+
               <tbody>
                 {filteredCourses.map((c) => (
-                  <tr
-                    key={c.id}
-                    className="border-b hover:bg-indigo-50 transition"
-                  >
+                  <tr key={c.id} className="border-b hover:bg-indigo-50 transition">
+
                     <td className="p-3 font-semibold text-indigo-700">{c.name}</td>
                     <td className="p-3 text-center">{c.teacher || "N/A"}</td>
                     <td className="p-3 text-center">{c.duration || "-"}</td>
+
                     <td className="p-3 text-center">
                       <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs">
                         {c.category}
                       </span>
                     </td>
+
+                    {/* 🔥 FIXED PART */}
                     <td className="p-3 text-center">
                       {c.syllabus_url ? (
-                        c.syllabus_url.endsWith(".pdf") ? (
-                          <a
-                            href={c.syllabus_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-indigo-600 hover:underline"
-                          >
-                            📄 View PDF
-                          </a>
-                        ) : (
+                        isImage(c.syllabus_url) ? (
                           <img
                             src={c.syllabus_url}
                             alt={c.name}
                             className="w-20 h-20 object-cover rounded mx-auto"
                           />
+                        ) : (
+                          <a
+                            href={c.syllabus_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-indigo-600 hover:underline"
+                          >
+                            📄 View File
+                          </a>
                         )
                       ) : (
                         "-"
                       )}
                     </td>
+
                     <td className="p-3 text-center">
                       <button
                         onClick={() => navigate(`/edit-course/${c.id}`)}
@@ -95,9 +104,11 @@ function CourseList() {
                         Edit
                       </button>
                     </td>
+
                   </tr>
                 ))}
               </tbody>
+
             </table>
           </div>
         )}
