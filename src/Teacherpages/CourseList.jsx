@@ -16,13 +16,12 @@ function CourseList() {
   }, []);
 
   const filteredCourses = courses.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
+    c.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-200 to-blue-300 p-10">
       <div className="max-w-7xl mx-auto bg-white/90 backdrop-blur-lg p-6 rounded-3xl shadow-2xl">
-
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
           <h2 className="text-3xl font-bold text-indigo-700">📚 Courses</h2>
 
@@ -44,7 +43,6 @@ function CourseList() {
         {!loading && filteredCourses.length > 0 && (
           <div className="overflow-x-auto">
             <table className="w-full text-sm rounded-xl overflow-hidden">
-
               <thead className="bg-indigo-600 text-white">
                 <tr>
                   <th className="p-3 text-left">Name</th>
@@ -58,36 +56,31 @@ function CourseList() {
 
               <tbody>
                 {filteredCourses.map((c) => (
-                  <tr key={c.id} className="border-b hover:bg-indigo-50 transition">
-
+                  <tr
+                    key={c.id}
+                    className="border-b hover:bg-indigo-50 transition"
+                  >
                     <td className="p-3 font-semibold text-indigo-700">
                       {c.name}
                     </td>
 
-                    <td className="p-3 text-center">
-                      {c.teacher || "N/A"}
-                    </td>
+                    <td className="p-3 text-center">{c.teacher || "N/A"}</td>
 
-                    <td className="p-3 text-center">
-                      {c.duration || "-"}
-                    </td>
+                    <td className="p-3 text-center">{c.duration || "-"}</td>
 
                     <td className="p-3 text-center">
                       <span className="px-2 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs">
                         {c.category}
                       </span>
                     </td>
-
-                    {/* ✅ FINAL FIX */}
                     <td className="p-3 text-center">
                       {c.syllabus_url ? (
                         <a
                           href={c.syllabus_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          download
                           className="text-indigo-600 hover:underline"
                         >
-                          📄 Open PDF
+                          📥 Download PDF
                         </a>
                       ) : (
                         "-"
@@ -102,15 +95,12 @@ function CourseList() {
                         Edit
                       </button>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
-
             </table>
           </div>
         )}
-
       </div>
     </div>
   );
