@@ -16,7 +16,7 @@ function CourseList() {
   }, []);
 
   const filteredCourses = courses.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase())
+    c.name.toLowerCase().includes(search.toLowerCase()),
   );
 
   // 🔥 File type check function
@@ -27,7 +27,6 @@ function CourseList() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-200 to-blue-300 p-10">
       <div className="max-w-7xl mx-auto bg-white/90 backdrop-blur-lg p-6 rounded-3xl shadow-2xl">
-
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
           <h2 className="text-3xl font-bold text-indigo-700">📚 Courses</h2>
           <input
@@ -60,9 +59,13 @@ function CourseList() {
 
               <tbody>
                 {filteredCourses.map((c) => (
-                  <tr key={c.id} className="border-b hover:bg-indigo-50 transition">
-
-                    <td className="p-3 font-semibold text-indigo-700">{c.name}</td>
+                  <tr
+                    key={c.id}
+                    className="border-b hover:bg-indigo-50 transition"
+                  >
+                    <td className="p-3 font-semibold text-indigo-700">
+                      {c.name}
+                    </td>
                     <td className="p-3 text-center">{c.teacher || "N/A"}</td>
                     <td className="p-3 text-center">{c.duration || "-"}</td>
 
@@ -71,26 +74,16 @@ function CourseList() {
                         {c.category}
                       </span>
                     </td>
-
-                    {/* 🔥 FIXED PART */}
                     <td className="p-3 text-center">
                       {c.syllabus_url ? (
-                        isImage(c.syllabus_url) ? (
-                          <img
-                            src={c.syllabus_url}
-                            alt={c.name}
-                            className="w-20 h-20 object-cover rounded mx-auto"
-                          />
-                        ) : (
-                          <a
-                            href={c.syllabus_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-indigo-600 hover:underline"
-                          >
-                            📄 View File
-                          </a>
-                        )
+                        <a
+                          href={c.syllabus_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-indigo-600 hover:underline"
+                        >
+                          📄 View File
+                        </a>
                       ) : (
                         "-"
                       )}
@@ -104,11 +97,9 @@ function CourseList() {
                         Edit
                       </button>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
-
             </table>
           </div>
         )}
