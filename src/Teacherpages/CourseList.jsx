@@ -75,18 +75,14 @@ function CourseList() {
                       </span>
                     </td>
                     <td className="p-3 text-center">
-                      {c.syllabus_url ? (
-                        <a
-                          href={c.syllabus_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-indigo-600 hover:underline"
-                        >
-                          📄 View File
-                        </a>
-                      ) : (
-                        "-"
-                      )}
+                      <a
+                        href={`https://docs.google.com/gview?url=${c.syllabus_url}&embedded=true`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-600 hover:underline"
+                      >
+                        📄 View PDF
+                      </a>
                     </td>
 
                     <td className="p-3 text-center">
